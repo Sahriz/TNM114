@@ -1,15 +1,24 @@
 import socket
+import os
 import time
 import tensorflow as tf
 import mediapipe as mp
 import cv2
 import sys
 import pkg_resources
+from tensorflow.keras.models import load_model
+import numpy as np
 
 HOST = "127.0.0.1"
 PORT = 5005
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+SCRIPT_DIR = os.path.abspath(SCRIPT_DIR)
+SCRIPT_DIR = os.path.join(SCRIPT_DIR, "hand_gesture_cnn.h5")
 
-rules = ["up", "down", "left", "right", "leftup", "leftdown", "rightup", "rightdown", "scatter", "cluster", "target", "nonsense"]
+gesture_labels = ["up", "down", "left", "right", "leftup", "leftdown", "rightup", "rightdown", "scatter", "cluster", "target", "nonsense"]
+current_gesture = "nonesense"
+
+
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 mp_hands = mp.solutions.hands
@@ -25,6 +34,24 @@ hands = mp_hands.Hands(
 running = True
 
 cap = cv2.VideoCapture(0)
+
+
+model = load_model(SCRIPT_DIR)
+
+def classify_frame(frame):
+    global current_gesture
+
+    # Preprocess the frame (resize + normalize)
+    img = cv2.resize(frame, (128, 128))
+    img = img.astype("float32") / 255.0
+    img = np.expand_dims(img, axis=0)  # add batch dimension
+
+    # Predict
+    predictions = model.predict(img)
+    class_index = np.argmax(predictions)
+    current_gesture = gesture_labels[class_index]
+
+    return current_gesture
 
 def resize_hand(frame, results):
     resized = None
@@ -70,9 +97,14 @@ def camera_feed():
     results = hands.process(rgb_frame)
     resized = None
     if results.multi_hand_landmarks:
+        global current_gesture
         resized = resize_hand(frame, results)
+        classified_gesture = classify_frame(resized)
+        cv2.putText(frame, f"Gesture: {classified_gesture}", (10, 40),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
     else:
         pass
+
     cv2.imshow("Camera Feed", frame)
     
     if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -85,7 +117,7 @@ def speaker(last_sent_time, interval=2):
     """Send rule messages periodically."""
     current_time = time.time()
     if current_time - last_sent_time >= interval:
-        msg = rules[int(current_time) % len(rules)]
+        msg = gesture_labels[int(current_time) % len(gesture_labels)]
         sock.sendall(msg.encode("utf-8"))
         print(f"Sent rule: {msg}")
         return current_time
