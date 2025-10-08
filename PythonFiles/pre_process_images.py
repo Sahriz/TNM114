@@ -35,8 +35,8 @@ def process_image(img_path, save_path):
     min_x, max_x = int(min(x_coords) * w), int(max(x_coords) * w)
     min_y, max_y = int(min(y_coords) * h), int(max(y_coords) * h)
 
-    pad_x = int((max_x - min_x) * 0.2)
-    pad_y = int((max_y - min_y) * 0.2)
+    pad_x = int((max_x - min_x) * 0.3)
+    pad_y = int((max_y - min_y) * 0.3)
 
     min_x = max(0, min_x - pad_x)
     max_x = min(w, max_x + pad_x)
