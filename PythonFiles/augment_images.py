@@ -16,11 +16,11 @@ IMG_SIZE = (128, 128)
 
 # ImageDataGenerator with augmentation options
 datagen = ImageDataGenerator(
-    rotation_range=20,      # rotate images by up to 20 degrees
-    width_shift_range=0.1,  # shift horizontally
-    height_shift_range=0.1, # shift vertically
-    zoom_range=0.2,         # zoom in/out
-    horizontal_flip=True,   # flip horizontally
+    rotation_range=30,      # rotate images by up to 20 degrees
+    width_shift_range=0.2,  # shift horizontally
+    height_shift_range=0.2, # shift vertically
+    zoom_range=0.3,         # zoom in/out
+    horizontal_flip=False,   # flip horizontally
     fill_mode='nearest'     # how to fill empty pixels
 )
 
@@ -50,7 +50,7 @@ def augment_images():
             for batch in datagen.flow(x, batch_size=1, save_to_dir=augmented_path,
                                       save_prefix='aug', save_format='png'):
                 i += 1
-                if i >= 5:  # create 5 augmented images per original
+                if i >= 100:  # create 5 augmented images per original
                     break
 
         print(f"Finished augmenting {label_folder}")

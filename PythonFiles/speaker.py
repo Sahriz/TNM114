@@ -97,7 +97,6 @@ def camera_feed():
     results = hands.process(rgb_frame)
     resized = None
     if results.multi_hand_landmarks:
-        global current_gesture
         resized = resize_hand(frame, results)
         classified_gesture = classify_frame(resized)
         cv2.putText(frame, f"Gesture: {classified_gesture}", (10, 40),
