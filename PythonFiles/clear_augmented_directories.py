@@ -2,13 +2,13 @@ import os
 
 # Root folder containing your labeled folders
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-ROOT_DIR = os.path.join(SCRIPT_DIR, "..", "Data", "TemporarySet")
+ROOT_DIR = os.path.join(SCRIPT_DIR, "..", "Data", "TemporarySet", "Augmented")
 ROOT_DIR = os.path.abspath(ROOT_DIR)
 
 def clear_cropped_folders():
     for label_folder in os.listdir(ROOT_DIR):
         label_path = os.path.join(ROOT_DIR, label_folder)
-        cropped_path = os.path.join(label_path, "Augmented")
+        cropped_path = os.path.join(label_path)
 
         if os.path.isdir(cropped_path):
             # Delete all files inside Cropped

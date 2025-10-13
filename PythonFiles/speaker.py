@@ -64,24 +64,57 @@ def resize_hand(frame, results):
         x_min, x_max = int(min(xs)), int(max(xs))
         y_min, y_max = int(min(ys)), int(max(ys))
         # Add padding to make sure we capture the whole hand
-        padding = int(0.3 * (x_max - x_min))
-        x_min = max(0, x_min - padding)
-        y_min = max(0, y_min - padding)
-        x_max = min(w, x_max + padding)
-        y_max = min(h, y_max + padding)
+        x_padding = int(0.3 * (x_max - x_min))
+        y_padding = int(0.3 * (y_max - y_min))
+        x_min = max(0, x_min - x_padding)
+        y_min = max(0, y_min - y_padding)
+        x_max = min(w, x_max + x_padding)
+        y_max = min(h, y_max + y_padding)
+        
+        # Draw landmarks on main frame first (for debugging the full frame)
+        mp_drawing.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
                 
         # Crop the region
-        cropped = frame[y_min:y_max, x_min:x_max]
+        cropped = frame[y_min:y_max, x_min:x_max].copy()
 
         if cropped.size > 0:
-            # Resize to 128x128
-            resized = cv2.resize(cropped, (128, 128))
+            # Create a copy for drawing landmarks on the cropped image
+            cropped_with_landmarks = cropped.copy()
+            
+            # Adjust landmarks to cropped coordinates
+            adjusted_landmarks = mp_hands.HandLandmark
+            landmark_drawing_spec = mp_drawing.DrawingSpec(color=(0, 255, 0), thickness=2, circle_radius=2)
+            connection_drawing_spec = mp_drawing.DrawingSpec(color=(255, 0, 0), thickness=2)
+            
+            # Draw landmarks on cropped image by adjusting coordinates
+            crop_h, crop_w = cropped.shape[:2]
+            for connection in mp_hands.HAND_CONNECTIONS:
+                start_idx = connection[0]
+                end_idx = connection[1]
+                
+                start_lm = hand_landmarks.landmark[start_idx]
+                end_lm = hand_landmarks.landmark[end_idx]
+                
+                # Convert to cropped image coordinates
+                start_x = int((start_lm.x * w - x_min) * crop_w / (x_max - x_min))
+                start_y = int((start_lm.y * h - y_min) * crop_h / (y_max - y_min))
+                end_x = int((end_lm.x * w - x_min) * crop_w / (x_max - x_min))
+                end_y = int((end_lm.y * h - y_min) * crop_h / (y_max - y_min))
+                
+                # Draw connection line
+                cv2.line(cropped_with_landmarks, (start_x, start_y), (end_x, end_y), (255, 0, 0), 2)
+            
+            # Draw landmark points
+            for lm in hand_landmarks.landmark:
+                lm_x = int((lm.x * w - x_min) * crop_w / (x_max - x_min))
+                lm_y = int((lm.y * h - y_min) * crop_h / (y_max - y_min))
+                cv2.circle(cropped_with_landmarks, (lm_x, lm_y), 3, (0, 255, 0), -1)
+            
+            # Resize to 128x128 (with landmarks drawn on it)
+            resized = cv2.resize(cropped_with_landmarks, (128, 128))
 
             # Show both frames
             cv2.imshow("Cropped Hand (128x128)", resized)
-
-        # Draw landmarks on main frame for debugging
-        mp_drawing.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
             
     return resized
 

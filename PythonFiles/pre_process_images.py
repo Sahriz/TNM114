@@ -6,9 +6,13 @@ import os
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Root directory where your labeled folders live
-ROOT_DIR = os.path.join(SCRIPT_DIR,"..", "Data", "TemporarySet")  # Go up one folder from PythonPrograms
-# Make it an absolute normalized path
+ROOT_DIR = os.path.join(SCRIPT_DIR, "..", "Data", "TemporarySet", "Original")
 ROOT_DIR = os.path.abspath(ROOT_DIR)
+
+# Output directory for cropped images (flat structure)
+CROPPED_OUTPUT_DIR = os.path.join(SCRIPT_DIR, "..", "Data", "TemporarySet", "Cropped")
+CROPPED_OUTPUT_DIR = os.path.abspath(CROPPED_OUTPUT_DIR)
+
 # Mediapipe Hands setup
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(static_image_mode=True, max_num_hands=1)
@@ -35,8 +39,8 @@ def process_image(img_path, save_path):
     min_x, max_x = int(min(x_coords) * w), int(max(x_coords) * w)
     min_y, max_y = int(min(y_coords) * h), int(max(y_coords) * h)
 
-    pad_x = int((max_x - min_x) * 0.3)
-    pad_y = int((max_y - min_y) * 0.3)
+    pad_x = int((max_x - min_x) * 0.8)
+    pad_y = int((max_y - min_y) * 0.8)
 
     min_x = max(0, min_x - pad_x)
     max_x = min(w, max_x + pad_x)
@@ -50,27 +54,31 @@ def process_image(img_path, save_path):
     print(f"Saved: {save_path}")
 
 def main():
+    # Create main Cropped directory
+    os.makedirs(CROPPED_OUTPUT_DIR, exist_ok=True)
+    
     # Iterate through labeled folders
     for label_folder in os.listdir(ROOT_DIR):
         label_path = os.path.join(ROOT_DIR, label_folder)
-        original_path = os.path.join(label_path, "Original")
-        cropped_path = os.path.join(label_path, "Cropped")
 
-        if not os.path.isdir(original_path):
+        if not os.path.isdir(label_path):
             continue  # Skip if no "Original" folder exists
 
-        os.makedirs(cropped_path, exist_ok=True)
+        # Create gesture subfolder in Cropped directory
+        gesture_cropped_path = os.path.join(CROPPED_OUTPUT_DIR, label_folder)
+        os.makedirs(gesture_cropped_path, exist_ok=True)
         print(f"\nProcessing folder: {label_folder}")
 
         # Loop through all images in Original/
-        for img_name in os.listdir(original_path):
+        for img_name in os.listdir(label_path):
             if not img_name.lower().endswith((".png", ".jpg", ".jpeg")):
                 continue
 
-            img_path = os.path.join(original_path, img_name)
-            save_path = os.path.join(cropped_path, img_name)
+            img_path = os.path.join(label_path, img_name)
+            save_path = os.path.join(gesture_cropped_path, img_name)
             process_image(img_path, save_path)
 
     print("\nAll images processed successfully!")
+    print(f"Cropped images saved to: {CROPPED_OUTPUT_DIR}")
 
 main()
