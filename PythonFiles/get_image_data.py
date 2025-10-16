@@ -8,10 +8,10 @@ OUTPUT_DIR = os.path.join(SCRIPT_DIR, "..", "Data", "TemporarySet", "Original")
 OUTPUT_DIR = os.path.abspath(OUTPUT_DIR)
 
 # Number of images to capture per gesture
-IMAGES_PER_GESTURE = 5
+IMAGES_PER_GESTURE = 25
 
 # Delay between captures (in seconds)
-CAPTURE_DELAY = 1.0
+CAPTURE_DELAY = 0.2
 
 # Gesture labels (in order)
 GESTURES = [
@@ -83,11 +83,11 @@ def capture_images_for_gesture(gesture_name, gesture_index):
             break
         
         # Display countdown and progress
-        progress_text = f"Capturing: {i + 1}/{IMAGES_PER_GESTURE}"
-        cv2.putText(frame, progress_text, (10, 30), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-        cv2.putText(frame, gesture_name, (10, 70), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+        #progress_text = f"Capturing: {i + 1}/{IMAGES_PER_GESTURE}"
+        #cv2.putText(frame, progress_text, (10, 30), 
+                  # cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        #cv2.putText(frame, gesture_name, (10, 70), 
+                   #cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
         
         cv2.imshow("Webcam - Get Image Data", frame)
         cv2.waitKey(1)

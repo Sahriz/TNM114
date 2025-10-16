@@ -7,12 +7,12 @@ from tensorflow.keras.regularizers import l2
 
 # Root directory
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-ROOT_DIR = os.path.join(SCRIPT_DIR, "..", "Data", "TemporarySet", "Processed")
+ROOT_DIR = os.path.join(SCRIPT_DIR, "..", "Data", "NUS_Organized")
 ROOT_DIR = os.path.abspath(ROOT_DIR)
 
 # Image parameters
 IMG_SIZE = (128, 128)
-BATCH_SIZE = 16
+BATCH_SIZE = 32
 EPOCHS = 50
 
 # Use ImageDataGenerator for training and validation (20% split)
@@ -34,10 +34,9 @@ val_generators = []
 # Real-time augmentation for training (creates variations on-the-fly)
 datagen_train = ImageDataGenerator(
     rescale=1./255,
-    rotation_range=25,           # Rotate up to 30 degrees
-    width_shift_range=0.15,       # Shift horizontally
-    height_shift_range=0.15,      # Shift vertically
-    zoom_range=0.15,              # Zoom in/out
+    rotation_range=10,           # Rotate up to 30 degrees
+    width_shift_range=0.05,       # Shift horizontally
+    height_shift_range=0.05,      # Shift vertically           # Zoom in/out
     fill_mode='nearest',
     horizontal_flip=False,       # Don't flip hands (gestures might change meaning)
     validation_split=0.2
@@ -89,19 +88,32 @@ print(f"Validation steps: {validation_steps}")
 # Build the CNN model
 model = Sequential([
     # First conv block
-    Conv2D(32, (3,3), activation='relu', padding='same', input_shape=(IMG_SIZE[0], IMG_SIZE[1], 3)),
+    Conv2D(32, (5,5), activation='relu', padding='same', input_shape=(IMG_SIZE[0], IMG_SIZE[1], 3)),
+    BatchNormalization(),
+    Conv2D(32, (5,5), activation='relu', padding='same'),
     BatchNormalization(),
     MaxPooling2D(2,2),
     Dropout(0.25),
     
     # Second conv block
-    Conv2D(64, (3,3), activation='relu', padding='same'),
+    Conv2D(64, (5,5), activation='relu', padding='same'),
+    BatchNormalization(),
+    Conv2D(64, (5,5), activation='relu', padding='same'),
+    BatchNormalization(),
+    MaxPooling2D(2,2),
+    Dropout(0.25),
+    
+    # Third conv block
+    Conv2D(128, (5,5), activation='relu', padding='same'),
     BatchNormalization(),
     MaxPooling2D(2,2),
     Dropout(0.25),
     
     # Dense layers
     Flatten(),
+    Dense(256, activation='relu'),
+    BatchNormalization(),
+    Dropout(0.5),
     Dense(128, activation='relu'),
     BatchNormalization(),
     Dropout(0.5),
@@ -136,7 +148,7 @@ history = model.fit(
     steps_per_epoch=steps_per_epoch,  # Specify how many batches per epoch
     validation_data=val_generator,
     validation_steps=validation_steps,  # Specify validation batches
-    epochs=50,
+    epochs=EPOCHS,
     callbacks=[early_stop, reduce_lr]
 )
 

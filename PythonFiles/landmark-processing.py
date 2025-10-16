@@ -38,8 +38,8 @@ def process_image_with_landmarks(img_path, save_path):
             img,
             hand_landmarks,
             mp_hands.HAND_CONNECTIONS,
-            mp_drawing.DrawingSpec(color=(0, 255, 0), thickness=2, circle_radius=2),  # Green dots
-            mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=2)  # Red lines
+            mp_drawing.DrawingSpec(color=(255, 0, 0), thickness=1, circle_radius=2),  # Green dots
+            mp_drawing.DrawingSpec(color=(255, 0, 255), thickness=2)  # Red lines
         )
 
     # Save the processed image
