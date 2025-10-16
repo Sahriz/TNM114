@@ -66,7 +66,7 @@ class Speaker:
             print("Continuing without socket connection...")
             self.sock = None
 
-    def send_gesture(self, gesture, interval=0.5):
+    def send_gesture(self, gesture, interval=0.05):
         """Send gesture via socket at specified interval"""
         if self.sock is None:
             return
@@ -108,9 +108,9 @@ class Speaker:
                 
                 self.current_gesture = gesture
                 text = f"{gesture} ({confidence*100:.1f}%)"
-                
-                # Send gesture via socket every 2 seconds
-                self.send_gesture(gesture, interval=0.5)
+
+                # Send gesture via socket every 0.05 seconds
+                self.send_gesture(gesture, interval=0.05)
             else:
                 text = "No hand detected"
                 self.current_gesture = "none"
