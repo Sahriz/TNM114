@@ -115,15 +115,15 @@ class Speaker:
                 text = "No hand detected"
                 self.current_gesture = "none"
 
-            cv2.putText(frame, text, (10, 30),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            #cv2.putText(frame, text, (10, 30),
+            #            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-            cv2.imshow("Speaker Gesture Recognition", frame)
+            #cv2.imshow("Speaker Gesture Recognition", frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
         self.cap.release()
-        cv2.destroyAllWindows()
+        #cv2.destroyAllWindows()
         if self.sock:
             self.sock.close()
             print("Socket connection closed")

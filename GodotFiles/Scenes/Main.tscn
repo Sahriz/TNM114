@@ -1,6 +1,17 @@
-[gd_scene load_steps=2 format=3 uid="uid://bupa0adoqy117"]
+[gd_scene load_steps=4 format=3 uid="uid://bupa0adoqy117"]
 
-[ext_resource type="Script" uid="uid://br551xw3imn53" path="res://Scripts/main.gd" id="1_r150o"]
+[ext_resource type="Script" uid="uid://br551xw3imn53" path="res://Scripts/Listener.gd" id="1_r150o"]
+[ext_resource type="Script" uid="uid://bttfke8g1n4e6" path="res://Scripts/boid_manager.gd" id="2_idj7w"]
+[ext_resource type="PackedScene" uid="uid://epc1d0fjx5pj" path="res://Scenes/boid.tscn" id="3_kln2b"]
 
-[node name="Node2D" type="Node2D"]
+[node name="Main" type="Node2D"]
+
+[node name="Listener" type="Node2D" parent="."]
 script = ExtResource("1_r150o")
+
+[node name="BoidManager" type="Node2D" parent="."]
+script = ExtResource("2_idj7w")
+boid_scene = ExtResource("3_kln2b")
+num_boids = 25
+
+[node name="BoidContainer" type="Node2D" parent="."]

@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://opafrdl15wg5"]
+
+[ext_resource type="Script" uid="uid://br551xw3imn53" path="res://Scripts/Listener.gd" id="1_gl6un"]
+[ext_resource type="Script" uid="uid://yw8ewoeufkpw" path="res://Scripts/manager.gd" id="1_iukft"]
+[ext_resource type="PackedScene" uid="uid://djog7hxqvahpi" path="res://Scenes/Unit.tscn" id="3_j5yw3"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Listener" type="Node2D" parent="."]
+script = ExtResource("1_gl6un")
+
+[node name="Manager" type="Node2D" parent="."]
+script = ExtResource("1_iukft")
+unit_scene = ExtResource("3_j5yw3")
