@@ -2,7 +2,7 @@ extends Node2D
 class_name Manager
 
 @export var unit_scene: PackedScene
-@export var num_units := 30
+@export var num_units := 1
 @export var radius := 100.0
 
 var units: Array[Node2D] = []
@@ -29,7 +29,7 @@ func _ready():
 		var dir = 1.0
 		if randf() < 0.5:
 			dir = -1.0
-		speeds.append(dir * (0.5 + randf() * 1.0))
+		speeds.append(dir * (4.5))
 
 		ellipse_scales.append(Vector2(
 			lerp(0.2, 1.2, randf()),
