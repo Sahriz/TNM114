@@ -5,38 +5,23 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, BatchNormalization
 from tensorflow.keras.regularizers import l2
 
-# Root directory
+# Hardcoded paths to HagRID processed images
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-ROOT_DIR = os.path.join(SCRIPT_DIR, "..", "Data", "NUS_Organized")
-ROOT_DIR = os.path.abspath(ROOT_DIR)
+DATA_DIR = r"C:\Project\TNM114\HagridCNN\hagrid_data\processed_images"
+
+print(f"Data directory: {DATA_DIR}")
 
 # Image parameters
-IMG_SIZE = (128, 128)
-BATCH_SIZE = 32
-EPOCHS = 50
+IMG_SIZE = (64, 64)
+BATCH_SIZE = 64  # Increased for large dataset - faster training
+EPOCHS = 20  # Reduced - large dataset trains faster
 
-# Use ImageDataGenerator for training and validation (20% split)
-datagen = ImageDataGenerator(
-    rescale=1./255,
-    validation_split=0.2
-)
-
-train_generators = []
-val_generators = []
-
-# Merge all augmented images into a single folder tree for flow_from_directory
-# We'll point flow_from_directory to ROOT_DIR but it must see the class subfolders
-# So your structure should be:
-# ROOT_DIR/
-#   follow/Augmented/
-#   scatter/Augmented/
-#   ...
 # Real-time augmentation for training (creates variations on-the-fly)
 datagen_train = ImageDataGenerator(
     rescale=1./255,
-    rotation_range=10,           # Rotate up to 30 degrees
+    rotation_range=10,           # Rotate up to 10 degrees
     width_shift_range=0.05,       # Shift horizontally
-    height_shift_range=0.05,      # Shift vertically           # Zoom in/out
+    height_shift_range=0.05,      # Shift vertically
     fill_mode='nearest',
     horizontal_flip=False,       # Don't flip hands (gestures might change meaning)
     validation_split=0.2
@@ -50,7 +35,7 @@ datagen_val = ImageDataGenerator(
 
 # Define train generator
 train_generator = datagen_train.flow_from_directory(
-    ROOT_DIR,
+    DATA_DIR,
     target_size=IMG_SIZE,
     batch_size=BATCH_SIZE,
     class_mode='categorical',
@@ -61,7 +46,7 @@ train_generator = datagen_train.flow_from_directory(
 
 # Define validation generator
 val_generator = datagen_val.flow_from_directory(
-    ROOT_DIR,
+    DATA_DIR,
     target_size=IMG_SIZE,
     batch_size=BATCH_SIZE,
     class_mode='categorical',
@@ -76,10 +61,10 @@ print(f"Number of gesture classes: {num_classes}")
 print(f"Training samples: {train_generator.samples}")
 print(f"Validation samples: {val_generator.samples}")
 
-# Calculate steps to see each image multiple times per epoch with different augmentations
-AUGMENTATION_FACTOR = 20  # Each original image will be seen 20 times per epoch with different augmentations
-steps_per_epoch = (train_generator.samples * AUGMENTATION_FACTOR) // BATCH_SIZE
-validation_steps = val_generator.samples // BATCH_SIZE
+# Calculate steps - no augmentation factor needed with large dataset
+# Let Keras handle it automatically with steps_per_epoch=None (will use all data once per epoch)
+steps_per_epoch = None  # Use all training data once per epoch
+validation_steps = None  # Use all validation data
 
 print(f"Steps per epoch: {steps_per_epoch}")
 print(f"Validation steps: {validation_steps}")
