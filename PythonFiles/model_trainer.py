@@ -7,14 +7,14 @@ from tensorflow.keras.regularizers import l2
 
 # Hardcoded paths to HagRID processed images
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = r"C:\Project\TNM114\HagridCNN\hagrid_data\processed_images"
+DATA_DIR = r"C:\Projekt\git\TNM114\HagridCNN\hagrid_data\processed_images"
 
 print(f"Data directory: {DATA_DIR}")
 
 # Image parameters
 IMG_SIZE = (64, 64)
 BATCH_SIZE = 64  # Increased for large dataset - faster training
-EPOCHS = 20  # Reduced - large dataset trains faster
+EPOCHS = 1000  # Reduced - large dataset trains faster
 
 # Real-time augmentation for training (creates variations on-the-fly)
 datagen_train = ImageDataGenerator(

@@ -13,7 +13,7 @@ PORT = 5005
 
 # Load landmark model and encoder
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(SCRIPT_DIR, 'hand_gesture_landmarks.keras')
+MODEL_PATH = os.path.join(SCRIPT_DIR, 'hand_gesture_cnn.keras')
 ENCODER_PATH = os.path.join(SCRIPT_DIR, 'label_encoder.pkl')
 model = tf.keras.models.load_model(MODEL_PATH)
 with open(ENCODER_PATH, 'rb') as f:
