@@ -1,10 +1,66 @@
-# Overview
-This is a project that I made as part of the course *Artificial Intelligence for Interactive Media - TNM114*. It is currently a WIP, but when finnished
-will consist trained convolutional neural networks which are trained on my own data to identify hand gestures using a web cam which will be used in a video game to control a swarm of characters. The project combines
-both python and gd script, where the python part of the system uses opencv and tensorflow to read the data and classify it. After which the godot part of the system listens through a web socket for the user inputs 
-and steers the flock depending on the classified gestures. 
+# Hand Gesture Recognition for Video Game Control
 
-# Data
-The current data is temporary and only meant to test the tensorflow framework. After the whole system is up and running, the dataset will be expanded and uploaded to Kaggle for others to use as well. If there is a demand,
-I might just add gestures that others want to the dataset when I find the time and drive to do so. The plan is to include multiple people into the dataset and with mulitple settings to make sure that the dataset doesn't
-easily overfit in a well made ML system.
+A real-time hand gesture recognition system designed to control video game characters using computer vision and deep learning. This project is part of the course *Artificial Intelligence for Interactive Media - TNM114*.
+
+## Overview
+
+This system uses trained convolutional neural networks to identify hand gestures from a webcam feed. The recognized gestures are sent to a Godot game engine to control a swarm of characters in real-time, creating an intuitive gesture-based game controller.
+
+The project combines:
+- **Python Backend** - OpenCV and TensorFlow for real-time gesture recognition
+- **Godot Frontend** - Game engine that listens for gesture inputs via WebSocket and controls character swarms accordingly
+
+## System Architecture
+
+### Python Component
+- Real-time hand detection using MediaPipe
+- CNN-based gesture classification trained on the HagRID dataset
+- Two approaches:
+  - **Landmark-based**: Uses hand skeleton coordinates for fast inference
+  - **Image-based**: Uses 64×64 hand region images for higher accuracy
+- WebSocket communication to send recognized gestures to Godot
+
+### Godot Component
+- Listens for gesture inputs from Python via WebSocket
+- Interprets gestures as game commands
+- Controls character swarm behavior based on recognized gestures
+
+## Dataset
+
+The project uses the **HagRID (Hand Gesture Recognition Image Dataset)** for training. The dataset is preprocessed and organized into labeled gesture classes stored in:
+```
+c:\Project\TNM114\HagridCNN\hagrid_data\processed_images
+```
+
+### Future Plans
+- Expand dataset with multiple people and diverse settings to improve generalization
+- Reduce overfitting through diverse training data
+- Upload finalized dataset to Kaggle for community use
+- Support custom gestures based on user requests
+
+## Models
+
+- **hand_gesture_landmarks.keras** - Landmark-based model (fast, real-time)
+- **hand_gesture_cnn.keras** - CNN image-based model (higher accuracy)
+
+## Usage
+
+### Training the Model
+```bash
+python model_trainer.py
+```
+
+### Running Gesture Recognition Demo
+```bash
+python speaker_demo.py  # Landmark-based with visual feedback
+python speaker_cnn.py   # CNN-based image recognition
+```
+
+## Requirements
+
+- Python 3.8+
+- TensorFlow/Keras
+- OpenCV
+- MediaPipe
+- NumPy
+- Godot Engine 4.x (for game integration)

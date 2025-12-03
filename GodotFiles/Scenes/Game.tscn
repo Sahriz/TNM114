@@ -12,3 +12,4 @@ script = ExtResource("1_gl6un")
 [node name="Manager" type="Node2D" parent="."]
 script = ExtResource("1_iukft")
 unit_scene = ExtResource("3_j5yw3")
+num_units = 20
