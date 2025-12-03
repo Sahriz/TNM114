@@ -32,12 +32,6 @@ The project uses the **HagRID (Hand Gesture Recognition Image Dataset)** for tra
 c:\Project\TNM114\HagridCNN\hagrid_data\processed_images
 ```
 
-### Future Plans
-- Expand dataset with multiple people and diverse settings to improve generalization
-- Reduce overfitting through diverse training data
-- Upload finalized dataset to Kaggle for community use
-- Support custom gestures based on user requests
-
 ## Models
 
 - **hand_gesture_landmarks.keras** - Landmark-based model (fast, real-time)
@@ -50,11 +44,16 @@ c:\Project\TNM114\HagridCNN\hagrid_data\processed_images
 python model_trainer.py
 ```
 
-### Running Gesture Recognition Demo
+### Running Gesture Recognition Demos
+
+Two demo scripts illustrate the different recognition approaches:
+
 ```bash
-python speaker_demo.py  # Landmark-based with visual feedback
-python speaker_cnn.py   # CNN-based image recognition
+python speaker_demo.py  # Landmark-based approach with visual feedback
+python speaker_cnn.py   # CNN image-based approach with higher accuracy
 ```
+
+Both demos display real-time gesture recognition from your webcam and show the predicted gesture with confidence score.
 
 ## Requirements
 
