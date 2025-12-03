@@ -55,6 +55,18 @@ python speaker_cnn.py   # CNN image-based approach with higher accuracy
 
 Both demos display real-time gesture recognition from your webcam and show the predicted gesture with confidence score.
 
+### Playing the Game with Gesture Control
+
+To use the full gesture-controlled game:
+
+1. Launch the Godot game engine and run the game project
+2. In a separate terminal, run the Python gesture recognition script:
+```bash
+python speaker.py  # Connects to the Godot game via WebSocket
+```
+
+The Python script will connect to the Godot game via WebSocket, sending recognized hand gestures in real-time. These gestures control the swarm of characters in the game, allowing you to steer them intuitively using hand movements captured from your webcam.
+
 ## Requirements
 
 - Python 3.8+
